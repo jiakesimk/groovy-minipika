@@ -20,6 +20,7 @@ package org.codehaus.groovy.classgen;
 
 import groovy.lang.GroovyRuntimeException;
 import org.apache.groovy.io.StringBuilderWriter;
+import org.apache.groovy.parser.antlr4.util.StringUtils;
 import org.codehaus.groovy.GroovyBugError;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
@@ -172,6 +173,12 @@ public class AsmClassGenerator extends ClassGenerator {
     public static final boolean CREATE_LINE_NUMBER_INFO = true;
     public static final boolean ASM_DEBUG = false; // add marker in the bytecode to show source-bytecode relationship
     public static final String MINIMUM_BYTECODE_VERSION = "_MINIMUM_BYTECODE_VERSION";
+
+
+    //
+    // minipika annotation pacakge path.
+    //
+    private final String MINIPIKA_ANNOTATION_PACKAGE = "org.jiakesimk.minipika.components.annotation";
 
     private WriterController controller;
     private ASTNode currentASTNode;
@@ -374,6 +381,17 @@ public class AsmClassGenerator extends ClassGenerator {
         Parameter[] parameters = node.getParameters();
         String methodType = BytecodeHelper.getMethodDescriptor(node.getReturnType(), parameters);
         String signature = BytecodeHelper.getGenericsMethodSignature(node);
+
+        if (StringUtils.isEmpty(signature)) {
+            for (AnnotationNode anode : node.getAnnotations()) {
+                String aname = anode.getClassNode().getName();
+                if (aname.substring(0, aname.lastIndexOf(".")).equals(MINIPIKA_ANNOTATION_PACKAGE)
+                        && "()Ljava/lang/Object;".equals(methodType)) {
+                    signature = "<T:Ljava/lang/Object;>()TT;";
+                }
+            }
+        }
+
         int modifiers = node.getModifiers();
         if (isVargs(node.getParameters())) modifiers |= ACC_VARARGS;
         MethodVisitor mv = classVisitor.visitMethod(modifiers, node.getName(), methodType, signature, buildExceptions(node.getExceptions()));
