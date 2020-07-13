@@ -386,8 +386,8 @@ public class AsmClassGenerator extends ClassGenerator {
             for (AnnotationNode anode : node.getAnnotations()) {
                 String aname = anode.getClassNode().getName();
                 if (aname.substring(0, aname.lastIndexOf(".")).equals(MINIPIKA_ANNOTATION_PACKAGE)
-                        && "()Ljava/lang/Object;".equals(methodType)) {
-                    signature = "<T:Ljava/lang/Object;>()TT;";
+                        && "(Ljava/lang/Object;)Ljava/lang/Object;".equals(methodType)) {
+                    signature = "<T:Ljava/lang/Object;>(Ljava/lang/Object;)TT;";
                 }
             }
         }
