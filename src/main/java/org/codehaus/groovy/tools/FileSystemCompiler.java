@@ -361,7 +361,7 @@ public class FileSystemCompiler {
         private boolean printStack;
 
         @Option(names = {"-pa", "--parameters"}, description = "Generate metadata for reflection on method parameter names (jdk8+ only)")
-        private boolean parameterMetadata;
+        private boolean parameterMetadata = true;
 
         @Option(names = {"-pr", "--enable-preview"}, description = "Enable preview Java features (JEP 12) (jdk12+ only) - must be after classpath but before other arguments")
         private boolean previewFeatures;
